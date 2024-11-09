@@ -99,6 +99,14 @@ static long int oled_timeout = 600000; // 10 minutes
 // Code containing pixel art, contains:
 // 5 idle frames, 1 prep frame, and 2 tap frames
 
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    if (is_keyboard_master()) {
+        return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+    }
+
+    return rotation;
+}
+
 // To make your own pixel art:
 // save a png/jpeg of an 128x32 image (resource: https://www.pixilart.com/draw )
 // follow this guide up to and including "CONVERT YOUR IMAGE" https://docs.splitkb.com/hc/en-us/articles/360013811280-How-do-I-convert-an-image-for-use-on-an-OLED-display-
