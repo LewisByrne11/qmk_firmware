@@ -210,6 +210,7 @@ static void render_anim(void) {
 
 // Used to draw on to the oled screen
 bool oled_task_user(void) {
-    render_anim();  // renders pixelart
-    }
+  render_anim();  // renders pixelart
+  return 0;
+}
 #endif
