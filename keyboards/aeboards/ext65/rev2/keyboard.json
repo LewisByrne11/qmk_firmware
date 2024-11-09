@@ -15,10 +15,7 @@
         "nkro": true,
         "backlight": false,
         "rgblight": true,
-        "sleep_led": true,
-        "oled_driver": true,
-        "wpm": true,
-        "oled": true
+        "sleep_led": true
     },
     "backlight": {
         "pin": "B5",
