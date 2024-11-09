@@ -213,7 +213,7 @@ bool oled_task_user(void) {
   led_t led_state = host_keyboard_led_state();  // caps lock stuff, prints CAPS on new line if caps led is on
   oled_set_cursor(0, 1);
   oled_write_P(led_state.caps_lock ? PSTR("CAPS") : PSTR("       "), false);
-  oled_set_cursor(0, 1);
+  oled_set_cursor(0, 2);
   oled_write_P(led_state.caps_lock ? PSTR("NUM") : PSTR("       "), false);
   return 0;
 }
