@@ -15,7 +15,6 @@
  */
 #include QMK_KEYBOARD_H
 #include <stdio.h>
-char wpm_str[10];
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /* Keymap BASE: (Base Layer) Default Layer
@@ -80,23 +79,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #ifdef OLED_ENABLE
 // WPM-responsive animation stuff here
 #    define IDLE_FRAMES 5
-#    define IDLE_SPEED 0  // below this wpm value your animation will idle
+#    define IDLE_SPEED 1  // below this wpm value your animation will idle
 
 //#    define PREP_FRAMES 1 // uncomment if >1
 
 #    define TAP_FRAMES 2
-#    define TAP_SPEED 0  // above this wpm value typing animation to trigger
+#    define TAP_SPEED 1  // above this wpm value typing animation to trigger
 
 #    define ANIM_FRAME_DURATION 200  // how long each frame lasts in ms
 // #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
 #    define ANIM_SIZE 636  // number of bytes in array, minimize for adequate firmware size, max is 1024
-
+char wpm_str[10];
 uint32_t anim_timer         = 0;
 uint32_t anim_sleep         = 0;
 uint8_t  current_idle_frame = 0;
 // uint8_t current_prep_frame = 0; // uncomment if PREP_FRAMES >1
 uint8_t current_tap_frame = 0;
-
+static long int oled_timeout = 600000; // 10 minutes
 // Code containing pixel art, contains:
 // 5 idle frames, 1 prep frame, and 2 tap frames
 
@@ -143,28 +142,33 @@ static void render_anim(void) {
 
     // assumes 1 frame prep stage
     void animation_phase(void) {
-        if (get_current_wpm() <= IDLE_SPEED) {
+
+        if (get_current_wpm() <=IDLE_SPEED) {
             current_idle_frame = (current_idle_frame + 1) % IDLE_FRAMES;
-            oled_write_raw_P(idle[abs((IDLE_FRAMES - 1) - current_idle_frame)], ANIM_SIZE);
+            oled_write_raw_P(idle[abs((IDLE_FRAMES-1)-current_idle_frame)], ANIM_SIZE);
         }
-        if (get_current_wpm() > IDLE_SPEED && get_current_wpm() < TAP_SPEED) {
-            // oled_write_raw_P(prep[abs((PREP_FRAMES-1)-current_prep_frame)], ANIM_SIZE); // uncomment if IDLE_FRAMES >1
-            oled_write_raw_P(prep[0], ANIM_SIZE);  // remove if IDLE_FRAMES >1
+
+        if (get_current_wpm() >IDLE_SPEED && get_current_wpm() <TAP_SPEED) {
+            oled_write_raw_P(prep[0], ANIM_SIZE);
         }
-        if (get_current_wpm() >= TAP_SPEED) {
+
+        if (get_current_wpm() >=TAP_SPEED) {
             current_tap_frame = (current_tap_frame + 1) % TAP_FRAMES;
-            oled_write_raw_P(tap[abs((TAP_FRAMES - 1) - current_tap_frame)], ANIM_SIZE);
+            oled_write_raw_P(tap[abs((TAP_FRAMES-1)-current_tap_frame)], ANIM_SIZE);
         }
     }
+    }
     if (get_current_wpm() != 000) {
-        oled_on();  // not essential but turns on animation OLED with any alpha keypress
+        oled_on();
+
         if (timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
             anim_timer = timer_read32();
             animation_phase();
         }
+
         anim_sleep = timer_read32();
     } else {
-        if (timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
+        if (timer_elapsed32(anim_sleep) > oled_timeout) {
             oled_off();
         } else {
             if (timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
@@ -173,10 +177,8 @@ static void render_anim(void) {
             }
         }
     }
-}
-
 // Used to draw on to the oled screen
-void oled_task_userer(void) {
+bool oled_task_user(void) {
     render_anim();  // renders pixelart
 
     oled_set_cursor(0, 0);                            // sets cursor to (row, column) using charactar spacing (5 rows on 128x32 screen, anything more will overflow back to the top)
@@ -186,5 +188,6 @@ void oled_task_userer(void) {
     led_t led_state = host_keyboard_led_state();  // caps lock stuff, prints CAPS on new line if caps led is on
     oled_set_cursor(0, 1);
     oled_write_P(led_state.caps_lock ? PSTR("CAPS") : PSTR("       "), false);
+    return false;
 }
 #endif
