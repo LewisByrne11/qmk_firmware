@@ -207,13 +207,13 @@ static void render_anim(void) {
 // Used to draw on to the oled screen
 bool oled_task_user(void) {
   render_anim();  // renders pixelart
-  oled_set_cursor(0, 0);                            // sets cursor to (row, column) using charactar spacing (5 rows on 128x32 screen, anything more will overflow back to the top)
+  oled_set_cursor(1, 0);                            // sets cursor to (row, column) using charactar spacing (5 rows on 128x32 screen, anything more will overflow back to the top)
   sprintf(wpm_str, "WPM:%03d", get_current_wpm());  // edit the string to change wwhat shows up, edit %03d to change how many digits show up
   oled_write(wpm_str, false);                       // writes wpm on top left corner of string
   led_t led_state = host_keyboard_led_state();  // caps lock stuff, prints CAPS on new line if caps led is on
-  oled_set_cursor(0, 1);
+  oled_set_cursor(1, 1);
   oled_write_P(led_state.caps_lock ? PSTR("CAPS") : PSTR("       "), false);
-  oled_set_cursor(0, 2);
+  oled_set_cursor(1, 2);
   oled_write_P(led_state.num_lock ? PSTR("NUM") : PSTR("       "), false);
   return 0;
 }
