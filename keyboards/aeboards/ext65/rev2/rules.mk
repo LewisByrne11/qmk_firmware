@@ -1,0 +1,3 @@
+DEFAULT_FOLDER = aeboards/ext65/rev2
+OLED_DRIVER_ENABLE = yes
+WPM_ENABLE = yes
