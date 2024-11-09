@@ -82,7 +82,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #    define IDLE_FRAMES 5
 #    define IDLE_SPEED 0  // below this wpm value your animation will idle
 
- #define PREP_FRAMES 1 // uncomment if >1
+//#    define PREP_FRAMES 1 // uncomment if >1
 
 #    define TAP_FRAMES 2
 #    define TAP_SPEED 0  // above this wpm value typing animation to trigger
@@ -176,7 +176,7 @@ static void render_anim(void) {
 }
 
 // Used to draw on to the oled screen
-bool oled_task_user(void) {
+void oled_task_userer(void) {
     render_anim();  // renders pixelart
 
     oled_set_cursor(0, 0);                            // sets cursor to (row, column) using charactar spacing (5 rows on 128x32 screen, anything more will overflow back to the top)
