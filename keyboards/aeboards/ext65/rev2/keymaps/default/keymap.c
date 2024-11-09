@@ -219,6 +219,9 @@ static void render_anim(void) {
 // Used to draw on to the oled screen
 bool oled_task_user(void) {
   render_anim();  // renders pixelart
+  led_t led_state = host_keyboard_led_state();  // caps lock stuff, prints CAPS on new line if caps led is on
+  oled_set_cursor(0, 1);
+  oled_write_P(led_state.caps_lock ? PSTR("CAPS") : PSTR("       "), false);
   return 0;
 }
 #endif
