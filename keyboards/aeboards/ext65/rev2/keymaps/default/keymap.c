@@ -88,7 +88,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #    define ANIM_FRAME_DURATION 200  // how long each frame lasts in ms
 // #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
-#    define ANIM_SIZE 636  // number of bytes in array, minimize for adequate firmware size, max is 1024
+#    define ANIM_SIZE 512  // number of bytes in array, minimize for adequate firmware size, max is 1024
 char wpm_str[10];
 uint32_t anim_timer         = 0;
 uint32_t anim_sleep         = 0;
