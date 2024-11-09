@@ -13,11 +13,12 @@
         "extrakey": true,
         "console": true,
         "nkro": true,
-        "backlight": true,
+        "backlight": false,
         "rgblight": true,
         "sleep_led": true,
         "oled_driver": true,
-        "wpm": true
+        "wpm": true,
+        "oled": true
     },
     "backlight": {
         "pin": "B5",
