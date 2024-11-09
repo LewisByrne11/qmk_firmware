@@ -214,7 +214,7 @@ bool oled_task_user(void) {
   oled_set_cursor(0, 1);
   oled_write_P(led_state.caps_lock ? PSTR("CAPS") : PSTR("       "), false);
   oled_set_cursor(0, 2);
-  oled_write_P(led_state.caps_lock ? PSTR("NUM") : PSTR("       "), false);
+  oled_write_P(led_state.num_lock ? PSTR("NUM") : PSTR("       "), false);
   return 0;
 }
 #endif
