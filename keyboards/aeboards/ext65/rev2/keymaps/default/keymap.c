@@ -35,37 +35,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [1] = LAYOUT(KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_DEL, KC_DEL, KC_DEL, KC_TRNS, UG_TOGG, UG_NEXT, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, UG_HUEU, UG_SATU, UG_VALU, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, UG_HUED, UG_SATD, UG_VALD, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS)
 };
 
-//#ifdef OLED_ENABLE
-//oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-//    if (!is_keyboard_master()) {
-//        return OLED_ROTATION_90; 
-//    }
-//
-//    return rotation;
-//}
-//static void render_logo(void) {
-//    static const char PROGMEM qmk_logo[] = {
-//        0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F, 0x90, 0x91, 0x92, 0x93, 0x94,
-//        0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF, 0xB0, 0xB1, 0xB2, 0xB3, 0xB4,
-//        0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF, 0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0x00
-//    };
-//
-//    oled_write_P(qmk_logo, false);
-//}
-//
-//bool oled_task_user(void) {
-//    render_logo();
-//    return false;
-//}
-//#endif
-
- //OLED STUFF STARTS HERE
- //based on https://github.com/qmk/qmk_firmware/blob/master/keyboards/kyria/keymaps/j-inc/keymap.
- //In your rules.mk make sure you have:
- //OLED_DRIVER_ENABLE = yes
- //WPM_ENABLE = yes
 #ifdef OLED_ENABLE
-// WPM-responsive animation stuff here
 #    define IDLE_FRAMES 5
 #    define IDLE_SPEED 1  // below this wpm value your animation will idle
 
@@ -75,7 +45,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #    define TAP_SPEED 1  // above this wpm value typing animation to trigger
 
 #    define ANIM_FRAME_DURATION 200  // how long each frame lasts in ms
-// #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
 #    define ANIM_SIZE 512  // number of bytes in array, minimize for adequate firmware size, max is 1024
 char wpm_str[10];
 uint32_t anim_timer         = 0;
@@ -95,11 +64,6 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return rotation;
 }
 
-// To make your own pixel art:
-// save a png/jpeg of an 128x32 image (resource: https://www.pixilart.com/draw )
-// follow this guide up to and including "CONVERT YOUR IMAGE" https://docs.splitkb.com/hc/en-us/articles/360013811280-How-do-I-convert-an-image-for-use-on-an-OLED-display-
-// replace numbers in brackets with your own
-// if you start getting errors when compiling make sure you didn't accedentally delete a bracket
 static void render_anim(void) {
 
     // Idle animation
@@ -210,7 +174,7 @@ bool oled_task_user(void) {
   oled_set_cursor(1, 0);                            // sets cursor to (row, column) using charactar spacing (5 rows on 128x32 screen, anything more will overflow back to the top)
   sprintf(wpm_str, "WPM:%03d", get_current_wpm());  // edit the string to change wwhat shows up, edit %03d to change how many digits show up
   oled_write(wpm_str, false);                       // writes wpm on top left corner of string
-  led_t led_state = host_keyboard_led_state();  // caps lock stuff, prints CAPS on new line if caps led is on
+  led_t led_state = host_keyboard_led_state();  // caps lock stuff, prints CAPS/NUM on new line if caps led is on
   oled_set_cursor(1, 1);
   oled_write_P(led_state.caps_lock ? PSTR("CAPS") : PSTR("       "), false);
   oled_set_cursor(1, 2);
